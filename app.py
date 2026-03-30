@@ -89,6 +89,19 @@ weather_json = get_weather_data(
 )
 
 df = convert_to_dataframe(weather_json)
+min_date = df["time"].dt.date.min()
+max_date = df["time"].dt.date.max()
+
+date_range = st.sidebar.date_input(
+    "Select date range",
+    value=(min_date, max_date),
+    min_value=min_date,
+    max_value=max_date
+)
+
+if len(date_range) == 2:
+    start_date, end_date = date_range
+    df = df[(df["time"].dt.date >= start_date) & (df["time"].dt.date <= end_date)]
 
 current = weather_json.get("current", {})
 
