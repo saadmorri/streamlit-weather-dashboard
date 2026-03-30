@@ -116,6 +116,22 @@ with st.expander("View processed data"):
     st.dataframe(df, use_container_width=True)
 
 st.subheader("Weather Trends")
+st.subheader("Daily Precipitation (Bar Chart)")
+
+# Create daily precipitation totals
+df_daily = df.copy()
+df_daily["date"] = df_daily["time"].dt.date
+
+daily_precip = df_daily.groupby("date")["precipitation"].sum().reset_index()
+
+fig_bar_daily = px.bar(
+    daily_precip,
+    x="date",
+    y="precipitation",
+    title="Total Daily Precipitation"
+)
+
+st.plotly_chart(fig_bar_daily, use_container_width=True)
 
 if "temperature_2m" in selected_variables:
     fig_temp = px.line(df, x="time", y="temperature_2m", title="Temperature Over Time")
